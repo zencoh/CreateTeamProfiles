@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/zencoh/CreateTeamProfiles/issues"
   },
-  "homepage": "https://github.com/zencoh/CreateTeamProfiles#readme"
+  "homepage": "https://github.com/zencoh/CreateTeamProfiles#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  }
 }
