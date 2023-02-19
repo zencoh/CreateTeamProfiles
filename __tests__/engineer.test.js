@@ -1,12 +1,14 @@
-const { describe } = require('node:test');
 const engineer = require('../lib/engineer');
 
 describe('engineer', () => {
     it("can set github account", () => {
         const test = zencoh;
-        const e = new engineer("foo", 2, "zencoh@gmail.com", test);
+        const e = new engineer("", 2, "", test);
         expect(e.github).toBe(test);
     });
 
-    // test for get role, it should return engineer
+    it("can set role", () => {
+        const e = new engineer(); 
+        expect(e.getRole()).toBe('engineer');
+    });
 })
