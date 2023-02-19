@@ -1,4 +1,5 @@
-
+function resultPage(box) {
+    return `
        <!DOCTYPE html>
        <html lang="en">
          <head>
@@ -19,10 +20,13 @@
             </header>
             <div class="container-fluid mx-auto">
                 <div class="row employeeRow"> 
-                     
+                    ${box} 
                 </div>
             </div>
           <script src="index.js"></script>
          </body>
         </html>
-       
+       `;
+  }
+  
+  module.exports = resultPage;
