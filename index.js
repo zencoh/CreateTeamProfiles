@@ -1,15 +1,15 @@
 // files needed to run the app
 const inquirer = require('inquirer');
 const fs = require('fs');
-const engineer = require('./lib/engineer');
-const intern = require('./lib/intern');
-const manager = require('./lib/manager');
+const Engineer = require('./lib/engineer');
+const Intern = require('./lib/intern');
+const Manager = require('./lib/manager');
 // const engineerHelper = require('./scr/engineerHelper');
 // const internHelper = require('./scr/internHelper');
 // const managerHelper = require('./scr/managerHelper');
 // const resultPage = require('./scr/resultPage');
 
-const employee = [];
+const employees = [];
 
 // Array of questions for user input
 
@@ -91,8 +91,8 @@ function promptEngineer() {
         currentEmployee.engineerPrompt = engineerPrompt
         console.log(currentEmployee);
 
-        const newEngineer = new engineer(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.engineerPrompt);
-        employee.push(newEngineer);
+        const newEngineer = new Engineer(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.engineerPrompt);
+        employees.push(newEngineer);
 
         iWantToBreakFree();
     })
@@ -111,8 +111,8 @@ function promptIntern() {
         currentEmployee.internPrompt = internPrompt
         console.log(currentEmployee);
 
-        const newIntern = new intern(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.internPrompt);
-        employee.push(newIntern);
+        const newIntern = new Intern(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.internPrompt);
+        employees.push(newIntern);
  
         iWantToBreakFree();
 
@@ -130,8 +130,8 @@ function promptManager() {
 
         var managerPrompt = answers.managerPrompt
         currentEmployee.managerPrompt = managerPrompt
-        const newManager = new manager(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.managerPrompt);
-        employee.push(newManager);
+        const newManager = new Manager(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.managerPrompt);
+        employees.push(newManager);
         iWantToBreakFree();
     })
 };
@@ -160,11 +160,11 @@ startPrompt()
 function generateHtml() {
     
         var html = '';
-        employee.forEach(function (e) {
+        employees.forEach(function (e) {
 
             const typeOfEmployee = e.role
 
-            if (typeOfEmployee == 'Intern' ) {
+            if (typeOfEmployee === 'intern' ) {
                 html += `<div class="col mt-5">
                 <div id="employees-div" class="card col-md-3" style="width: 18rem;">
                     <div class="card-body" style="background-color: rgb(57, 89, 153);">
@@ -179,7 +179,7 @@ function generateHtml() {
             </div>
             
             `
-            } if (typeOfEmployee == 'Manager') {
+            } if (typeOfEmployee === 'manager') {
                 html += `<div class="col mt-5">
                 <div id="employees-div" class="card col-md-3" style="width: 18rem;">
                     <div class="card-body" style="background-color: rgb(57, 89, 153);">
@@ -194,7 +194,7 @@ function generateHtml() {
             </div>
             
             `
-            } if (typeOfEmployee == 'Engineer') {
+            } if (typeOfEmployee === 'engineer') {
                 html += `<div class="col mt-5">
                 <div id="employees-div" class="card col-md-3" style="width: 18rem;">
                     <div class="card-body" style="background-color: rgb(57, 89, 153);">
@@ -213,11 +213,11 @@ function generateHtml() {
             return html
         })
 
-    fs.readFile('./dist/teamProfiles.html', 'utf-8', (err, data) => {
+    fs.readFile('./dist/teamProfilesTemplate.html', 'utf-8', (err, data) => {
         if (err) {
             console.log(err);
         } else {
-            mainHtmlPage = data.replace('<!-- {{employee}} -->', html);
+            const mainHtmlPage = data.replace('<!-- {{employee}} -->', html);
             fs.writeFile('./dist/teamProfiles.html', mainHtmlPage, (err) => {
                 if (err)
                 console.log(err);
@@ -226,9 +226,10 @@ function generateHtml() {
                 }
             });
         }
-        // fs.writeFile('./dist/teamProfiles.html', mainHtmlPage, 'utf-8', function (err, data) {
-        //     if (err) throw err;
-        //     console.log(mainHtmlPage);
-        // })
+    // const mainHtmlPage = data.replace('<!-- {{employee}} -->', html);
+    //     fs.writeFile('./dist/teamProfiles.html', mainHtmlPage, 'utf-8', function (err, data) {
+    //         if (err) throw err;
+    //         console.log(mainHtmlPage);
+    //     })
     });
 }
