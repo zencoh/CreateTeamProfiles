@@ -208,7 +208,7 @@ function generateHtml() {
             console.log(err);
         } else {
             const mainHtmlPage = data.replace('<!-- {{employee}} -->', html);
-            fs.writeFile('./dist/teamProfiles.html', mainHtmlPage, (err) => {
+            fs.writeFile('./teamProfiles.html', mainHtmlPage, (err) => {
                 if (err)
                 console.log(err);
                 else {
