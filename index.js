@@ -4,15 +4,11 @@ const fs = require('fs');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 const Manager = require('./lib/manager');
-// const engineerHelper = require('./scr/engineerHelper');
-// const internHelper = require('./scr/internHelper');
-// const managerHelper = require('./scr/managerHelper');
-// const resultPage = require('./scr/resultPage');
 
+// empty array of employees that will fill based on user input
 const employees = [];
 
-// Array of questions for user input
-
+// array of questions for user input
 function startPrompt() {
     currentEmployee = {}
     return inquirer.prompt([
@@ -33,7 +29,6 @@ function startPrompt() {
                 return true;
             }
         },
-
         {
             type: 'input',
             name: 'email',
@@ -52,14 +47,12 @@ function startPrompt() {
                 }
             }
         },
-
         {
             type: 'list',
             name: 'typeOfEmployee',
-            message: 'What is your position?',
+            message: 'What is the team member\'s position?',
             choices: ['Engineer', 'Intern', 'Manager']
-        },
-
+        }
         // bringing all the startPrompt() answers to the array
     ]).then(function (answers) {
         var name = answers.name;
@@ -74,27 +67,25 @@ function startPrompt() {
         } else if (answers.typeOfEmployee === 'Intern') {
             return promptIntern();
         } else return promptManager();
-    })
+    });
 };
-// adding each type of employee using functions and creating the hole array 
-// with then to be used on the html file
+// adding each specific roles prompt to the rest of their answers
 function promptEngineer() {
     return inquirer.prompt([
         {
             type: 'input',
-            name: 'engineerPrompt',
-            message: 'What is your github?'
+            name: 'github',
+            message: 'What is the engineer\'s github username?'
         }
     ]).then(function (answers) {
-
-        var engineerPrompt = answers.engineerPrompt
-        currentEmployee.engineerPrompt = engineerPrompt
+        var github = answers.github
+        currentEmployee.github = github
         console.log(currentEmployee);
 
-        const newEngineer = new Engineer(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.engineerPrompt);
+        const newEngineer = new Engineer(currentEmployee.name, currentEmployee.id, currentEmployee.email, currentEmployee.github);
         employees.push(newEngineer);
 
-        iWantToBreakFree();
+        finishPrompt();
     })
 };
 
@@ -102,19 +93,18 @@ function promptIntern() {
     return inquirer.prompt([
         {
             type: 'input',
-            name: 'internPrompt',
-            message: 'What is your school?'
+            name: 'school',
+            message: 'What school did the intern attend?'
         }
     ]).then(function (answers) {
-
-        var internPrompt = answers.internPrompt
-        currentEmployee.internPrompt = internPrompt
+        var school = answers.school
+        currentEmployee.school = school
         console.log(currentEmployee);
 
-        const newIntern = new Intern(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.internPrompt);
+        const newIntern = new Intern(currentEmployee.name, currentEmployee.id, currentEmployee.email, currentEmployee.school);
         employees.push(newIntern);
  
-        iWantToBreakFree();
+        finishPrompt();
 
     })
 };
@@ -123,22 +113,24 @@ function promptManager() {
     return inquirer.prompt([
         {
             type: 'input',
-            name: 'managerPrompt',
-            message: 'What is your office number?'
+            name: 'officeNumber',
+            message: 'What is the manager\'s office number?'
         }
     ]).then(function (answers) {
+        var officeNumber = answers.officeNumber
+        currentEmployee.officeNumber = officeNumber
+        console.log(currentEmployee);
 
-        var managerPrompt = answers.managerPrompt
-        currentEmployee.managerPrompt = managerPrompt
-        const newManager = new Manager(currentEmployee.name, currentEmployee.identification, currentEmployee.email, currentEmployee.managerPrompt);
+        const newManager = new Manager(currentEmployee.name, currentEmployee.id, currentEmployee.email, currentEmployee.officeNumber);
         employees.push(newManager);
-        iWantToBreakFree();
+
+        finishPrompt();
     })
 };
 
-// this function will either loop the questions or call the function to generate the HTML 
+// this function will either loop the questions to add another employee or it will create the html file
 
-function iWantToBreakFree() {
+function finishPrompt() {
     return inquirer.prompt([
         {
             type:'list',
@@ -150,60 +142,57 @@ function iWantToBreakFree() {
         if (answers.startNewPrompt === 'Yes') {
             return new startPrompt()
         } else return generateHtml();
-    })
-
-}
+    });
+};
 
 startPrompt()
 
-
 function generateHtml() {
-    
-        var html = '';
-        employees.forEach(function (e) {
-
-            const typeOfEmployee = e.role
-
-            if (typeOfEmployee === 'intern' ) {
-                html += `<div class="col mt-5">
-                <div id="employees-div" class="card col-md-3" style="width: 18rem;">
-                    <div class="card-body" style="background-color: rgb(57, 89, 153);">
-                        <div class="h2 card-title" style="color: rgb(255, 255, 255);">${e.name}</div>
-                        <div class="h3 card-subtitle mb-2" style="color: thistle;">${e.role}</div>
-                    </div>
-                    <div class="h5 card-body card-text mb-2" style="color: rgb(0, 0, 0);">Employee ID: ${e.id}
-                        <div class="card-text mt-2">Email: ${e.email}</div>
-                        <div class="card-text mt-2">School: ${e.school}</div>
-                    </div>
+    var html = '';
+    employees.forEach(function (e) {
+        const typeOfEmployee = e.role;
+        if (typeOfEmployee === 'Intern' ) {
+            html += `<div class="col mt-5">
+            <div id="employees-div" class="card col-md-3" style="width: 18rem;">
+                <div class="card-body" style="background-color: rgb(57, 89, 153);">
+                    <div class="h2 card-title" style="color: rgb(255, 255, 255);">${e.name}</div>
+                    <div class="h3 card-subtitle mb-2" style="color: rgb(255, 255, 255);">${e.role}</div>
+                </div>
+                <div class="h5 card-body card-text mb-2" style="color: rgb(0, 0, 0);">Employee ID: ${e.id}
+                    <div class="card-text mt-2">Email:<a href = "mailto: ${e.email}">${e.email}</a></div>
+                    <div class="card-text mt-2">School: ${e.school}</div>
+                </div>
                 </div>
             </div>
             
             `
-            } if (typeOfEmployee === 'manager') {
+            }
+            else if (typeOfEmployee === 'Manager') {
                 html += `<div class="col mt-5">
                 <div id="employees-div" class="card col-md-3" style="width: 18rem;">
                     <div class="card-body" style="background-color: rgb(57, 89, 153);">
                         <div class="h2 card-title" style="color: rgb(255, 255, 255);">${e.name}</div>
-                        <div class="h3 card-subtitle mb-2" style="color: thistle;">${e.role}</div>
+                        <div class="h3 card-subtitle mb-2" style="color: rgb(255, 255, 255);">${e.role}</div>
                     </div>
                     <div class="h5 card-body card-text mb-2" style="color: rgb(0, 0, 0);">Employee ID: ${e.id}
-                        <div class="card-text mt-2">Email: ${e.email}</div>
+                        <div class="card-text mt-2">Email:<a href = "mailto: ${e.email}">${e.email}</a></div>
                         <div class="card-text mt-2">Office Number: ${e.officeNumber}</div>
                     </div>
                 </div>
             </div>
             
             `
-            } if (typeOfEmployee === 'engineer') {
+            } 
+            else if (typeOfEmployee === 'Engineer') {
                 html += `<div class="col mt-5">
                 <div id="employees-div" class="card col-md-3" style="width: 18rem;">
                     <div class="card-body" style="background-color: rgb(57, 89, 153);">
                         <div class="h2 card-title" style="color: rgb(255, 255, 255);">${e.name}</div>
-                        <div class="h3 card-subtitle mb-2" style="color: thistle;">${e.role}</div>
+                        <div class="h3 card-subtitle mb-2" style="color: rgb(255, 255, 255);">${e.role}</div>
                     </div>
                     <div class="h5 card-body card-text mb-2" style="color: rgb(0, 0, 0);">Employee ID: ${e.id}
-                        <div class="card-text mt-2">Email: ${e.email}</div>
-                        <div class="card-text mt-2">Github info: ${e.github}</div>
+                        <div class="card-text mt-2">Email:<a href = "mailto: ${e.email}">${e.email}</a></div>
+                        <div class="card-text mt-2">GitHub:<a href = https://github.com/${e.github}>${e.github}</a></div>
                     </div>
                 </div>
             </div>
@@ -213,6 +202,7 @@ function generateHtml() {
             return html
         })
 
+// this reads the template html file and then writes to a new file after adding the box of employee information above
     fs.readFile('./dist/teamProfilesTemplate.html', 'utf-8', (err, data) => {
         if (err) {
             console.log(err);
@@ -225,11 +215,6 @@ function generateHtml() {
                     console.log('profile generated sucessfully')
                 }
             });
-        }
-    // const mainHtmlPage = data.replace('<!-- {{employee}} -->', html);
-    //     fs.writeFile('./dist/teamProfiles.html', mainHtmlPage, 'utf-8', function (err, data) {
-    //         if (err) throw err;
-    //         console.log(mainHtmlPage);
-    //     })
+        };
     });
 }

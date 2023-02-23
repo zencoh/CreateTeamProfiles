@@ -1,14 +1,14 @@
-const intern = require('../lib/intern');
+const Intern = require('../lib/intern');
 
 describe('intern', () => {
     it("can set name of school", () => {
         const test = "Kansas University";
-        const e = new intern("", 3, "", test);
+        const e = new Intern("", 3, "", test);
         expect(e.school).toBe(test);
     });
 
     it("can set role", () => {
-        const e = new intern(); 
-        expect(e.getRole()).toBe('intern');
+        const e = new Intern(); 
+        expect(e.getRole()).toBe('Intern');
     });
 })
